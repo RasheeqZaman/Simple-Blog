@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Simple Blog App',
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -58,6 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Text(widget.title),
       ),
       body: Center(
@@ -79,6 +81,38 @@ class BlogBoxList  extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, pos){
+        return GestureDetector(
+          child: Container(
+            height: 250,
+            child: Card(
+              semanticContainer: true,
+              clipBehavior: Clip.antiAliasWithSaveLayer,
+              child: Image.network(
+                items[pos].coverPhoto,
+                fit: BoxFit.cover,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              elevation: 5,
+              margin: EdgeInsets.all(10),
+            ),
+          ),
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlogPage(item: items[pos]),
+              ),
+            );
+          },
+        );
+      },
+    );
+
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, pos){
@@ -105,23 +139,6 @@ class BlogBoxList  extends StatelessWidget {
             );
           },
         );
-
-        return Padding(
-          padding: EdgeInsets.only(bottom: 10.0),
-          child: Card(
-            color: Colors.blue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-              child: Text(
-                items[pos].id,
-                style: TextStyle(
-                    fontSize: 16.0,
-                    height: 1.6
-                ),
-              ),
-            ),
-          ),
-        );
       },
     );
   }
@@ -144,7 +161,7 @@ class BlogPage extends StatelessWidget{
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Image.asset("assets/appimages/" + this.item.coverPhoto),
+                Image.network(this.item.coverPhoto),
                 Expanded(
                     child: Container(
                         padding: EdgeInsets.all(5),
