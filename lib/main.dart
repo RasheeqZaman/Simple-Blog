@@ -85,50 +85,36 @@ class BlogBoxList  extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (context, pos){
         return GestureDetector(
-          child: Container(
-            height: 250,
-            child: Card(
-              semanticContainer: true,
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              child: Image.network(
-                items[pos].coverPhoto,
-                fit: BoxFit.cover,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0),
-              ),
-              elevation: 5,
-              margin: EdgeInsets.all(10),
-            ),
-          ),
-          onTap: (){
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BlogPage(item: items[pos]),
-              ),
-            );
-          },
-        );
-      },
-    );
-
-    return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (context, pos){
-        return GestureDetector(
           child: Card(
-            color: Colors.blue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-              child: Text(
-                items[pos].id,
-                style: TextStyle(
-                    fontSize: 16.0,
-                    height: 1.6
+            semanticContainer: true,
+            clipBehavior: Clip.antiAliasWithSaveLayer,
+            child: Stack(
+              children: <Widget>[
+                Image.network(
+                  items[pos].coverPhoto,
+                  width: double.infinity,
+                  height: 250,
+                  fit: BoxFit.cover,
                 ),
-              ),
+                Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                      items[pos].title,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.white,
+                          backgroundColor: Colors.black.withOpacity(0.5)
+                      )
+                  ),
+                )
+              ],
             ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8.0),
+            ),
+            elevation: 5,
+            margin: EdgeInsets.all(10),
           ),
           onTap: (){
             Navigator.push(
@@ -161,17 +147,31 @@ class BlogPage extends StatelessWidget{
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Image.network(this.item.coverPhoto),
+                Image.network(
+                  item.coverPhoto,
+                  width: double.infinity,
+                  height: 250,
+                  fit: BoxFit.cover,
+                ),
                 Expanded(
                     child: Container(
-                        padding: EdgeInsets.all(5),
+                        padding: EdgeInsets.all(10),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: <Widget>[
+                            Text("ID: " + this.item.id),
                             Text(this.item.title, style:
                             TextStyle(fontWeight: FontWeight.bold)),
                             Text(this.item.desc),
-                            Text("Price: " + this.item.id),
+                            Text(this.item.categories.join(", ")),
+                            Image.network(
+                              item.author.avatar,
+                              width: 70,
+                              height: 70,
+                              fit: BoxFit.fill,
+                            ),
+                            Text(this.item.author.name),
+                            Text(this.item.author.profession),
                           ],
                         )
                     )
