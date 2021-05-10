@@ -31,12 +31,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  List<String> blogName = ["A", "B", "C"];
+  //List<String> blogName = ["A", "B", "C"];
+  Future<List<Blog>> blogs;
 
   @override
   void initState(){
     super.initState();
-    fetchBlogs();
+    blogs = fetchBlogs();
   }
 
   Future<List<Blog>> fetchBlogs() async{
@@ -60,11 +61,19 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: buildList(),
+      body: Center(
+          child: FutureBuilder<List<Blog>>(
+            future: blogs,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) print(snapshot.error);
+              return snapshot.hasData ? BlogBoxList(items: snapshot.data) : Center(child: CircularProgressIndicator());
+            },
+          ),
+      ),
     );
   }
 
-  Widget buildList() {
+  /*Widget buildList() {
     return ListView.builder(
       itemCount: blogName.length,
       itemBuilder: (context, pos){
@@ -86,7 +95,38 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       },
     );
+  }*/
+}
+
+class BlogBoxList  extends StatelessWidget {
+  final List<Blog> items;
+  BlogBoxList({Key key, this.items});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: items.length,
+      itemBuilder: (context, pos){
+        return Padding(
+          padding: EdgeInsets.only(bottom: 10.0),
+          child: Card(
+            color: Colors.blue,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+              child: Text(
+                items[pos].id,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    height: 1.6
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
+
 }
 
 class Blog {
