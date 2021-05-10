@@ -31,7 +31,6 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  //List<String> blogName = ["A", "B", "C"];
   Future<List<Blog>> blogs;
 
   @override
@@ -72,30 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
-
-  /*Widget buildList() {
-    return ListView.builder(
-      itemCount: blogName.length,
-      itemBuilder: (context, pos){
-        return Padding(
-          padding: EdgeInsets.only(bottom: 10.0),
-          child: Card(
-            color: Colors.blue,
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
-              child: Text(
-                blogName[pos],
-                style: TextStyle(
-                  fontSize: 16.0,
-                  height: 1.6
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }*/
 }
 
 class BlogBoxList  extends StatelessWidget {
@@ -107,6 +82,30 @@ class BlogBoxList  extends StatelessWidget {
     return ListView.builder(
       itemCount: items.length,
       itemBuilder: (context, pos){
+        return GestureDetector(
+          child: Card(
+            color: Colors.blue,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 15.0),
+              child: Text(
+                items[pos].id,
+                style: TextStyle(
+                    fontSize: 16.0,
+                    height: 1.6
+                ),
+              ),
+            ),
+          ),
+          onTap: (){
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => BlogPage(item: items[pos]),
+              ),
+            );
+          },
+        );
+
         return Padding(
           padding: EdgeInsets.only(bottom: 10.0),
           child: Card(
@@ -124,6 +123,46 @@ class BlogBoxList  extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+}
+
+class BlogPage extends StatelessWidget{
+  final Blog item;
+
+  BlogPage({Key key, this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(this.item.title),),
+      body: Center(
+        child: Container(
+          padding: EdgeInsets.all(0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Image.asset("assets/appimages/" + this.item.coverPhoto),
+                Expanded(
+                    child: Container(
+                        padding: EdgeInsets.all(5),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            Text(this.item.title, style:
+                            TextStyle(fontWeight: FontWeight.bold)),
+                            Text(this.item.desc),
+                            Text("Price: " + this.item.id),
+                          ],
+                        )
+                    )
+                )
+              ]
+          ),
+        ),
+      ),
     );
   }
 
